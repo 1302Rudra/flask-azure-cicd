@@ -1,28 +1,12 @@
-name: Build and deploy Python app to Azure Web App
-
-on:
-  push:
-    branches:
-      - main
-
-jobs:
-  build-and-deploy:
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v3
-
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.14'
-
-    - name: Install dependencies
-      run: |
-        pip install -r requirements.txt
-
-    - name: Deploy to Azure
-      uses: azure/webapps-deploy@v2
-      with:
-        app-name: flask-cicd-app
-        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+From flask import Flask, request
+app = Flask(__name__)
+@app.route('/')
+def home():
+ return "Addition API is running!"
+@app.route('/add')
+def add():
+ a = int(request.args.get('a', 0))
+ b = int(request.args.get('b', 0))
+ return {"result": a + b}
+if __name__ == '__main__':
+ app.run(host='0.0.0.0', port=80)
